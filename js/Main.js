@@ -40,7 +40,23 @@ const parkingClick = (e) => {
  * Mark parking as taken
  */
 const deleteCurrParking = () => {
-	//TODO
+	const id = e.target.getAttribute("data-parking-id");
+	fetch(`http://localhost:3000/parkings/${id}`, {
+		method: 'DELETE'
+	})
+	.then((response) => {
+		if (!response.ok) {
+			throw Error(response.status + " " + response.statusText);
+		}
+		return (response.json());
+	})
+	.then((data) => {
+		const updatedParkings = data.filter((parking) => parking.id !== id);
+		return updatedParkings;
+	})
+	.catch((err) => {
+		console.log(`error! ${err}`);
+	});
 }
 
 /**
@@ -49,6 +65,7 @@ const deleteCurrParking = () => {
 const addParking = () => {
     // Getting the coords
 	const coords = document.getElementById("newParkingCoord").getAttribute("value").replace("(", "").replace(")", "").split(",");
+	const address = document.getElementById("newParkingAddress").getAttribute("value");
 	
     fetch(`http://localhost:3000/parkings`, {
 		method: 'POST'
@@ -60,7 +77,16 @@ const addParking = () => {
 		return (response.json());
 	})
 	.then((data) => {
-		return data.concat(newParking)
+		const newParking = {
+			id: shortid.generate(),
+			x_coord: coords[0],
+			y_coord: coords[1],
+			address: address,
+			time: Date.now(),
+		};
+	
+		const updatedParkings = data.concat(newParking);
+		return updatedParkings;
 	})
 	.catch((err) => {
 		console.log(`error! ${err}`);

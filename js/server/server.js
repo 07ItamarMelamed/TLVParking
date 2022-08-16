@@ -3,7 +3,7 @@ const express = require('express');
 const app = express();
 const port = 3000;
 
-const {getAll, getById, deleteById, addParking} = require('./utils');
+const {getAll, getById, deleteById, addParkingToList} = require('./utils');
 
 app.use(cors());
 app.use(function(req, res, next) {
@@ -34,7 +34,7 @@ app.delete('/parkings/:id', (req, res) => {
 });
 
 app.post('/parkings', (req, res) => {
-    res.send(addParking(req.body));
+    res.send(addParkingToList(req.body));
 });
 
 app.listen(port, () => console.log(`Listening on port ${port}...`));

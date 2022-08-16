@@ -25,7 +25,7 @@ const deleteById = (id, res) => {
   return res.send(`Parking ${id} has been deleted`);
 };
 
-const addParking = (p) => {
+const addParkingToList = (p) => {
   const newParking = {
     id: shortid.generate(),
     x_coord: p.x_coord,
@@ -38,7 +38,7 @@ const addParking = (p) => {
   const updatedParkings = getAll().concat(newParking);
   fs.writeFileSync(PATH_PARKINGS, JSON.stringify(updatedParkings));
 
-  return newParking;
+  return updatedParkings;
 };
 
-module.exports = { getAll, getById, deleteById, addParking };
+module.exports = { getAll, getById, deleteById, addParkingToList };
