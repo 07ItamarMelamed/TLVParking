@@ -4,8 +4,9 @@ const PATH_PARKINGS = require('/js/path.js');
 
 const validateParking = (p) => {
     const schema = {
-        name: Joi.string().required(),
-        price: Joi.string().required()
+        x_coord: Joi.number().required(),
+        y_coord: Joi.number().required(),
+        address: Joi.string().required()
     };
 
     return Joi.validate(p, schema);
@@ -43,15 +44,20 @@ const addParking = (p) => {
         return res.status(400).send(error.details[0].message);
     }
 
-    let current = new Date();
+    const current = new Date();
 
-    return {
+    const newParking = {
         ID: getAll().length + 1,
         x_coord: p.x_coord,
         y_coord: p.y_coord,
         address: p.address,
         time: current.toLocaleTimeString()
     };
+
+    const updatedParkings = getAll().push(newParking);
+    fs.writeFileSync(PATH_PARKINGS, updatedParkings);
+
+    return newParking;
 }
 
 module.exports = {getAll, getById, deleteById, addParking};

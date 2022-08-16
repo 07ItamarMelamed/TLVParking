@@ -1,32 +1,24 @@
 const express = require('express');
 const app = express();
 const port = 3000;
-const {getAll, getById, deleteById, addParking} = require('js/server/utils.js');
+const {getAll, getById, deleteById, addParking} = require('/js/server/utils.js');
 
 app.use(express.json());
 
-app.get('/api/books', (req, res) => {
-    res.send(getBooks());
+app.get('/parkings', (req, res) => {
+    res.send(getAll());
 })
 
-app.get('/api/books/:id', (req, res) => {
-    res.send(getBookById(parseInt(req.params.id)));
+app.get('/parkings/:id', (req, res) => {
+    res.send(getById(+req.params.id));
 })
 
-app.post('/api/books', (req, res) => {
-    const newBook = createBook(req.body);
-    getBooks().push(newBook);
-    res.send(newBook);
+app.delete('/parkings/:id', (req, res) => {
+    res.send(deleteById(+req.params.id));
 });
 
-app.delete('/api/books/:id', (req, res) => {
-    const deletedBook = deleteBook(parseInt(req.params.id));
-    res.send(deletedBook);
-});
-
-app.put('/api/books/:id', (req, res) => {
-    const updatedBook = updateBook(parseInt(req.params.id), req.body);
-    res.send(updatedBook);
+app.post('/parkings', (req, res) => {
+    res.send(addParking(req.body));
 });
 
 app.listen(port, () => console.log(`Listening on port ${port}...`));
