@@ -1,63 +1,44 @@
-const Joi = require('joi');
-const fs = require('fs');
-const PATH_PARKINGS = require('/js/path.js');
-
-const validateParking = (p) => {
-    const schema = {
-        x_coord: Joi.number().required(),
-        y_coord: Joi.number().required(),
-        address: Joi.string().required()
-    };
-
-    return Joi.validate(p, schema);
-};
+const Joi = require("joi");
+const fs = require("fs");
+const shortid = require("shortid");
+const {PATH_PARKINGS} = require('../path');
 
 const getAll = () => {
-    const parkings = fs.readFileSync(PATH_PARKINGS);
-    return parkings;
-}
+    return JSON.parse(fs.readFileSync(PATH_PARKINGS, "utf8"));
+};
 
 const getById = (id) => {
-    return getAll().find((parking) => parking.ID === id);
-}
+  return getAll().find((parking) => parking.id === id);
+};
 
-const deleteById = (id) => {
-    const p = getById(id);
-    if (!p) {
-        return res.status(404).send('The parking with the given ID was not found.');
-    }
-    
-    const index = getAll().indexOf(p);
-    getAll().forEach((parkingFromList) => {
-        if (getAll().indexOf(parkingFromList) > index) {
-            parkingFromList.ID--;
-        }
-    })
-    getAll().splice(index, 1);
+const deleteById = (id, res) => {
+  const p = getById(id);
+  if (!p) {
+    return res.status(404).send("The parking with the given ID was not found.");
+  }
 
-    return p;
-}
+  const updatedParkings = getAll().filter((parking) => parking.id !== id);
+  if (updatedParkings.length === getAll().length) {
+    return res.status(404).send("Parking not found. Deletion failed.");
+  }
+  fs.writeFileSync(PATH_PARKINGS, JSON.stringify(updatedParkings));
+  return res.send(`Parking ${id} has been deleted`);
+};
 
 const addParking = (p) => {
-    const { error } = validateParking(p);
-    if (error) {
-        return res.status(400).send(error.details[0].message);
-    }
+  const newParking = {
+    id: shortid.generate(),
+    x_coord: p.x_coord,
+    y_coord: p.y_coord,
+    address: p.address,
+    time: Date.now(),
+  };
 
-    const current = new Date();
+  console.log(getAll());
+  const updatedParkings = getAll().concat(newParking);
+  fs.writeFileSync(PATH_PARKINGS, JSON.stringify(updatedParkings));
 
-    const newParking = {
-        ID: getAll().length + 1,
-        x_coord: p.x_coord,
-        y_coord: p.y_coord,
-        address: p.address,
-        time: current.toLocaleTimeString()
-    };
+  return newParking;
+};
 
-    const updatedParkings = getAll().push(newParking);
-    fs.writeFileSync(PATH_PARKINGS, updatedParkings);
-
-    return newParking;
-}
-
-module.exports = {getAll, getById, deleteById, addParking};
+module.exports = { getAll, getById, deleteById, addParking };

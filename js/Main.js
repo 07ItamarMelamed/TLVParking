@@ -50,7 +50,21 @@ const addParking = () => {
     // Getting the coords
 	const coords = document.getElementById("newParkingCoord").getAttribute("value").replace("(", "").replace(")", "").split(",");
 	
-    //TODO
+    fetch(`http://localhost:3000/parkings`, {
+		method: 'POST'
+	})
+	.then((response) => {
+		if (!response.ok) {
+			throw Error(response.status + " " + response.statusText);
+		}
+		return (response.json());
+	})
+	.then((data) => {
+		return data.concat(newParking)
+	})
+	.catch((err) => {
+		console.log(`error! ${err}`);
+	});
 }
 
 /**
@@ -65,8 +79,23 @@ const refreshParkings = () => {
 /**
  * load all the parking from the server
  */
+
 const loadParkings = () => {
-	// TODO
+	fetch('http://localhost:3000/parkings', {
+		method: 'GET'
+	})
+	.then((response) => {
+		if (!response.ok) {
+			throw Error(response.status + " " + response.statusText);
+		}
+		return (response.json());
+	})
+	.then((data) => {
+		return data;
+	})
+	.catch((err) => {
+		console.log(`error! ${err}`);
+	});
 }
 
 /**
@@ -74,7 +103,21 @@ const loadParkings = () => {
  * @param {int} id id of the parking to get details on
  */
 const loadSpecificParking = (id) => {
-	// TODO
+	fetch(`http://localhost:3000/parkings/${id}`, {
+		method: 'GET'
+	})
+	.then((response) => {
+		if (!response.ok) {
+			throw Error(response.status + " " + response.statusText);
+		}
+		return (response.json());
+	})
+	.then((data) => {
+		return data;
+	})
+	.catch((err) => {
+		console.log(`error! ${err}`);
+	});
 }
 
 /**

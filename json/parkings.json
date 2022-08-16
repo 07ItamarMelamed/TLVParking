@@ -1,16 +1,17 @@
 [
     {
-        "ID": 1,
-        "x_coord": 25,
-        "y_coord": 25,
-        "address": "Rishon Lezion",
-        "time": "3:38:14 PM"
+      "id": "12kjhg",
+      "x_coord": 12,
+      "y_coord": 5,
+      "address": "String",
+      "time": "String"
     },
     {
-        "ID": 2,
-        "x_coord": 100,
-        "y_coord": 100,
-        "address": "Ashdod",
-        "time": "9:12:28 PM"
+      "id": "luYQFL3vf",
+      "x_coord": 123,
+      "y_coord": 456,
+      "address": "miami",
+      "time": "Tue Aug 16 2022"
     }
-]
+  ]
+  
