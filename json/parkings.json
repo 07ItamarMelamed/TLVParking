@@ -1,0 +1,16 @@
+[
+    {
+        "ID": 1,
+        "x_coord": 25,
+        "y_coord": 25,
+        "address": "Rishon Lezion",
+        "time": "3:38:14 PM"
+    },
+    {
+        "ID": 2,
+        "x_coord": 100,
+        "y_coord": 100,
+        "address": "Ashdod",
+        "time": "9:12:28 PM"
+    }
+]
