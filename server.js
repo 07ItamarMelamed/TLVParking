@@ -1,10 +1,20 @@
 const express = require("express");
+const cors = require('cors');
 const shortid = require("shortid");
 const { getParkings, updateParkings } = require("./utils");
 const PORT = 3000;
 
 const app = express();
 app.use(express.json());
+
+app.use(cors());
+app.use(function(req, res, next) {
+	res.setHeader('Access-Control-Allow-Origin', '*');
+	res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+	res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+	res.setHeader('Access-Control-Allow-Credentials', true);
+	next();
+});
 
 //Endpoints
 
@@ -59,7 +69,7 @@ const id= req.body.id
 app.delete("/api/parking/:id", (req, res) => {
   const parkingId = req.params.id;
   const parkings = getParkings();
-  
+
   //filter
 
   const updatedParkings = parkings.filter((parking) => parking.id !== parkingId);

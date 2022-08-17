@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 const parkingClick = (e) => {
 	if (e.target && e.target.classList.contains('parking')) {
-		document.getElementById("side-nav-toggle").click()
+		document.getElementById("side-nav-toggle").click();
 		loadSpecificParking(e.target.getAttribute("data-parking-id"));
 	 }
  };
@@ -39,58 +39,51 @@ const parkingClick = (e) => {
 /**
  * Mark parking as taken
  */
-const deleteCurrParking = () => {
-	const id = e.target.getAttribute("data-parking-id");
-	fetch(`http://localhost:3000/parkings/${id}`, {
-		method: 'DELETE'
-	})
-	.then((response) => {
-		if (!response.ok) {
-			throw Error(response.status + " " + response.statusText);
-		}
-		return (response.json());
-	})
-	.then((data) => {
-		const updatedParkings = data.filter((parking) => parking.id !== id);
-		return updatedParkings;
-	})
-	.catch((err) => {
-		console.log(`error! ${err}`);
-	});
+const deleteCurrParking = async () => {
+	try {
+		const response = await fetch(
+			`http://localhost:3000/api/parking/${currParkingId}`, 
+			{
+				method: 'DELETE',
+				headers: {'Content-Type': 'application/json'}
+			}
+		);
+		await response.json();
+		refreshParkings();
+	} catch (e) {
+		alert(`Error. ${e.message}`);
+	}
 }
 
 /**
  * Add new parking
  */
-const addParking = () => {
-    // Getting the coords
+const addParking = async () => {
+
+    // Getting the coords and address
 	const coords = document.getElementById("newParkingCoord").getAttribute("value").replace("(", "").replace(")", "").split(",");
-	const address = document.getElementById("newParkingAddress").getAttribute("value");
+	const currAddress = document.getElementById("newParkingAddress").value;
 	
-    fetch(`http://localhost:3000/parkings`, {
-		method: 'POST'
-	})
-	.then((response) => {
-		if (!response.ok) {
-			throw Error(response.status + " " + response.statusText);
-		}
-		return (response.json());
-	})
-	.then((data) => {
-		const newParking = {
-			id: shortid.generate(),
-			x_coord: coords[0],
-			y_coord: coords[1],
-			address: address,
-			time: Date.now(),
-		};
-	
-		const updatedParkings = data.concat(newParking);
-		return updatedParkings;
-	})
-	.catch((err) => {
-		console.log(`error! ${err}`);
-	});
+    try {
+		const response = await fetch(
+			`http://localhost:3000/api/parking`, 
+			{
+				method: 'POST',
+				body: JSON.stringify(
+					{
+						x_coord: coords[0],
+						y_coord: coords[1],
+						address: currAddress
+					}
+				),
+				headers: {'Content-Type': 'application/json'}
+			}
+		);
+		await response.json();
+		refreshParkings();
+	} catch (e) {
+		alert(`Error. ${e.message}`);
+	}
 }
 
 /**
@@ -106,44 +99,38 @@ const refreshParkings = () => {
  * load all the parking from the server
  */
 
-const loadParkings = () => {
-	fetch('http://localhost:3000/parkings', {
-		method: 'GET'
-	})
-	.then((response) => {
-		if (!response.ok) {
-			throw Error(response.status + " " + response.statusText);
-		}
-		return (response.json());
-	})
-	.then((data) => {
-		return data;
-	})
-	.catch((err) => {
-		console.log(`error! ${err}`);
-	});
+const loadParkings = async () => {
+	try {
+		const response = await fetch(
+			`http://localhost:3000/api/parkings`, 
+			{
+				method: 'GET'
+			}
+		);
+		const data = await response.json();
+		drawParkings(data);
+	} catch (e) {
+		alert(`Error. ${e.message}`);
+	}
 }
 
 /**
  * load specific parking's details
  * @param {int} id id of the parking to get details on
  */
-const loadSpecificParking = (id) => {
-	fetch(`http://localhost:3000/parkings/${id}`, {
-		method: 'GET'
-	})
-	.then((response) => {
-		if (!response.ok) {
-			throw Error(response.status + " " + response.statusText);
-		}
-		return (response.json());
-	})
-	.then((data) => {
-		return data;
-	})
-	.catch((err) => {
-		console.log(`error! ${err}`);
-	});
+const loadSpecificParking = async (id) => {
+	try {
+		const response = await fetch(
+			`http://localhost:3000/api/parking/${id}`, 
+			{
+				method: 'GET'
+			}
+		);
+		const data = await response.json();
+		showParkingDetails(data);
+	} catch (e) {
+		alert(`Error. ${e.message}`);
+	}
 }
 
 /**
