@@ -1,84 +1,66 @@
 const express = require("express");
 const cors = require('cors');
 const shortid = require("shortid");
-const { getParkings, updateParkings } = require("./utils");
+const { updateParking, getParkings, getParkingById, insertParking, deleteParkingById } = require("./utils");
+const { connectClient } = require("./data/database");
 const PORT = 3000;
 
 const app = express();
 app.use(express.json());
 
 app.use(cors());
-app.use(function(req, res, next) {
-	res.setHeader('Access-Control-Allow-Origin', '*');
-	res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-	res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-	res.setHeader('Access-Control-Allow-Credentials', true);
-	next();
-});
 
 //Endpoints
 
-app.get("/api/parking/:id", (req, res) => {
+app.get("/api/parking/:id", async (req, res) => {
   const parkingId = req.params.id;
-  const parkings = getParkings();
-  requestedParking = parkings.find((parking) => parking.id === parkingId);
-
-  if (!requestedParking) {
-    res.status(404).send(`parking ${parkingId} not found`);
-  } else {
-    res.send(requestedParking);
-  }
+  await getParkingById(parkingId)
+  .then((requestedParking) => {
+    if (requestedParking == []) {
+      res.status(404).send(`parking ${parkingId} not found`);
+    } else {
+      res.send(requestedParking);
+    }
+  });
 });
-app.get("/api/parkings", (req, res) => {
-  const parkings = getParkings();
 
-  if (!parkings || !parkings.length) {
-    res.status(404).send(`Parkings do not exist`);
-  } else {
-    res.send(parkings);
-  }
+app.get("/api/parkings", async (req, res) => {
+  await getParkings()
+  .then((parkings) => {
+    if (parkings == []) {
+      res.status(404).send(`Parkings do not exist`);
+    } else {
+      res.send(parkings);
+    }
+  });
 });
 
 //  Create
-app.post("/api/parking", (req, res) => {
-  const parkings = getParkings();
+app.post("/api/parking", async (req, res) => {
   const newParking = {
     id: shortid.generate(),
     x_coord: req.body.x_coord,
-      y_coord: req.body.y_coord,
-      address:req.body.address,
-      time: Date.now()
+    y_coord: req.body.y_coord,
+    address:req.body.address,
+    time: Date.now()
   };
   
-  parkings.push(newParking);
-  updateParkings(parkings);
+  insertParking(newParking);
   res.send(newParking);
 });
 
-app.put("/api/parking", (req, res) => {
-const id= req.body.id
-  const parkings = getParkings();
-  let updatedParkings = parkings.map(parking=>parking.id===id?req.body:parking)
-  updateParkings(updatedParkings);
+app.put("/api/parking", async (req, res) => {
+  updateParking(req.body);
   res.send(req.body);
 });
 
 
 
 //Delete
-app.delete("/api/parking/:id", (req, res) => {
+app.delete("/api/parking/:id", async (req, res) => {
   const parkingId = req.params.id;
-  const parkings = getParkings();
-
-  //filter
-
-  const updatedParkings = parkings.filter((parking) => parking.id !== parkingId);
-  if (updateParkings.length === parkings.length) {
-    res.status(404).send("Parking not found. Deletion failed.");
-  } else {
-    updateParkings(updatedParkings);
-    res.send(`Parking ${parkingId} has been deleted`);
-  }
+  deleteParkingById(parkingId);
+  res.send(`Parking ${parkingId} has been deleted`);
 });
 
 app.listen(PORT, function (err) {
@@ -86,6 +68,5 @@ app.listen(PORT, function (err) {
     console.log("Error in server setup");
   }
   console.log("Server listening on Port", PORT);
+  connectClient();
 });
-
-

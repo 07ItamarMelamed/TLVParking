@@ -51,7 +51,7 @@ const deleteCurrParking = async () => {
 		await response.json();
 		refreshParkings();
 	} catch (e) {
-		alert(`Error. ${e.message}`);
+		console.log(`Error. ${e.message}`);
 	}
 }
 
@@ -82,7 +82,7 @@ const addParking = async () => {
 		await response.json();
 		refreshParkings();
 	} catch (e) {
-		alert(`Error. ${e.message}`);
+		console.log(`Error. ${e.message}`);
 	}
 }
 
@@ -110,7 +110,7 @@ const loadParkings = async () => {
 		const data = await response.json();
 		drawParkings(data);
 	} catch (e) {
-		alert(`Error. ${e.message}`);
+		console.log(`Error. ${e.message}`);
 	}
 }
 
@@ -129,7 +129,7 @@ const loadSpecificParking = async (id) => {
 		const data = await response.json();
 		showParkingDetails(data);
 	} catch (e) {
-		alert(`Error. ${e.message}`);
+		console.log(`Error. ${e.message}`);
 	}
 }
 

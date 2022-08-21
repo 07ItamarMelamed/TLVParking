@@ -1,1 +1,23 @@
-[{"id":"12kjhg","x_coord":12,"y_coord":5,"address":"String","time":"String"},{"id":"luYQFL3vf","x_coord":123,"y_coord":456,"address":"miami","time":"Tue Aug 16 2022"},{"id":"XSy6wxDhF","x_coord":"1315","y_coord":"40","address":"גשר","time":1660726789830}]
+[
+  {
+    "id": "12kjhg",
+    "x_coord": 12,
+    "y_coord": 5,
+    "address": "String",
+    "time": "String"
+  },
+  {
+    "id": "luYQFL3vf",
+    "x_coord": 123,
+    "y_coord": 456,
+    "address": "miami",
+    "time": "Tue Aug 16 2022"
+  },
+  {
+    "id": "XSy6wxDhF",
+    "x_coord": "1315",
+    "y_coord": "40",
+    "address": "גשר",
+    "time": 1660726789830
+  }
+]

@@ -1,16 +1,34 @@
-const fs = require("fs");
-const { PARKINGS_JSON_PATH } = require("./definitions.js");
+const {queryUpdate, queryGet, queryInsert, queryGetById, queryDeleteById} = require('./data/queries');
 
-function updateParkings(parkings) {
-  fs.writeFileSync(PARKINGS_JSON_PATH, JSON.stringify(parkings), "utf8");
-
+function updateParking(p) {
+  console.log("update parking");
+  queryUpdate(p);
 }
 
 function getParkings() {
-  return JSON.parse(fs.readFileSync(PARKINGS_JSON_PATH, "utf8"));
+  console.log("get parkings");
+  return queryGet();
+}
+
+function insertParking(p) {
+  console.log("insert parking");
+  queryInsert(p);
+}
+
+function getParkingById(id) {
+  console.log("get parking by id");
+  return queryGetById(id);
+}
+
+function deleteParkingById(id) {
+  console.log("delete parking by id");
+  queryDeleteById(id);
 }
 
 module.exports = {
-  updateParkings,
+  updateParking,
   getParkings,
+  getParkingById,
+  insertParking,
+  deleteParkingById,
 };
